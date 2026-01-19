@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layer customizations */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-navy-950 text-navy-100;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-navy-500;
+  }
+
+  /* Focus states for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-blue;
+  }
+}
+
+/* Component layer */
+@layer components {
+  /* Glass panel effect */
+  .glass-panel {
+    @apply bg-gradient-to-br from-white/[0.08] to-white/[0.02]
+           backdrop-blur-xl border border-white/10
+           rounded-2xl shadow-glass;
+  }
+
+  .glass-panel-sm {
+    @apply bg-gradient-to-br from-white/[0.06] to-white/[0.02]
+           backdrop-blur-lg border border-white/10
+           rounded-xl shadow-glass-sm;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 rounded-xl font-semibold
+           bg-accent-blue hover:bg-blue-600
+           text-white shadow-lg shadow-blue-500/25
+           transition-all duration-200
+           hover:shadow-xl hover:shadow-blue-500/30
+           active:scale-[0.98]
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 rounded-xl font-medium
+           bg-white/10 hover:bg-white/15
+           text-white border border-white/20
+           transition-all duration-200
+           hover:border-white/30
+           active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-lg font-medium
+           text-navy-200 hover:text-white
+           hover:bg-white/10
+           transition-all duration-200;
+  }
+
+  /* Intake chip button */
+  .intake-chip {
+    @apply inline-flex items-center gap-2
+           px-4 py-2.5 rounded-xl
+           bg-navy-800/80 hover:bg-navy-700
+           border border-navy-600/50 hover:border-navy-500
+           text-sm font-medium text-navy-100
+           transition-all duration-200
+           cursor-pointer
+           active:scale-[0.98];
+  }
+
+  .intake-chip:hover {
+    @apply shadow-lg shadow-black/20;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-accent-blue via-accent-teal to-accent-blue
+           bg-clip-text text-transparent bg-[length:200%_auto]
+           animate-[gradient_3s_linear_infinite];
+  }
+
+  /* Trust badge */
+  .trust-badge {
+    @apply inline-flex items-center gap-2
+           px-3 py-1.5 rounded-full
+           bg-navy-800/60 border border-navy-700/50
+           text-xs font-medium text-navy-200;
+  }
+
+  /* FAQ accordion */
+  .faq-item {
+    @apply border-b border-navy-800 last:border-0;
+  }
+
+  .faq-question {
+    @apply w-full flex items-center justify-between gap-4
+           py-5 text-left font-medium text-navy-100
+           hover:text-white transition-colors;
+  }
+
+  .faq-answer {
+    @apply pb-5 text-navy-300 leading-relaxed;
+  }
+}
+
+/* Utility layer */
+@layer utilities {
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Gradient animation */
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Subtle pulse for CTA */
+  .pulse-ring {
+    @apply absolute inset-0 rounded-xl;
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    }
+  }
+}
+
+/* Toast notification styles */
+.toast-enter {
+  animation: toast-enter 0.3s ease-out;
+}
+
+.toast-exit {
+  animation: toast-exit 0.2s ease-in forwards;
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%) scale(0.95);
+  }
+}
+
+/* Dev mode banner */
+.dev-banner {
+  @apply fixed top-0 left-0 right-0 z-50
+         bg-amber-500 text-amber-950 text-center
+         text-xs font-medium py-1;
+}
+
+/* Chatlio widget positioning override (optional) */
+chatlio-widget {
+  /* Can customize position if needed */
+}

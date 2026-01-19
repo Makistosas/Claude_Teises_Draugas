@@ -1,0 +1,16 @@
+{
+  "name": "Teisės draugas",
+  "short_name": "TD",
+  "description": "AI pagalbininkas teisiniais klausimais",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#102a43",
+  "theme_color": "#102a43",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
