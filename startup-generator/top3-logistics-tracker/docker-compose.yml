@@ -1,0 +1,127 @@
+version: '3.8'
+
+# =============================================
+# KROVINYS.LT - Docker Compose
+# Krovinių Sekimo ir Pranešimų Sistema
+# Paleidimas: docker compose up -d
+# =============================================
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: krovinys-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - frontend_build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: krovinys-backend
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
+      - documents:/app/documents
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=https://${DOMAIN}/api
+        - REACT_APP_MAPS_KEY=${GOOGLE_MAPS_KEY}
+    container_name: krovinys-frontend
+    volumes:
+      - frontend_build:/app/build
+    networks:
+      - krovinys-network
+
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: krovinys-celery
+    command: celery -A app.celery_app worker --loglevel=info
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: krovinys-celery-beat
+    command: celery -A app.celery_app beat --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+
+  postgres:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: krovinys-postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: krovinys-redis
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - krovinys-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  frontend_build:
+  documents:
+
+networks:
+  krovinys-network:
+    driver: bridge

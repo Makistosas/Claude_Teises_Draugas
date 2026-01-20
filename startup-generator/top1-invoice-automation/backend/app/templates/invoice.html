@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Sąskaita faktūra {{ invoice.invoice_number }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+            padding: 20mm;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .company-info {
+            max-width: 50%;
+        }
+
+        .company-name {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .company-details {
+            font-size: 9pt;
+            color: #666;
+        }
+
+        .invoice-info {
+            text-align: right;
+        }
+
+        .invoice-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .invoice-number {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .invoice-dates {
+            font-size: 9pt;
+            color: #666;
+        }
+
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .party {
+            width: 45%;
+        }
+
+        .party-title {
+            font-size: 9pt;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .party-name {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .party-details {
+            font-size: 9pt;
+            color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background-color: #1e40af;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-size: 9pt;
+            text-transform: uppercase;
+        }
+
+        th:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 9pt;
+        }
+
+        td:last-child {
+            text-align: right;
+        }
+
+        .totals {
+            width: 300px;
+            margin-left: auto;
+            margin-bottom: 30px;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .totals-row.grand-total {
+            border-bottom: none;
+            border-top: 2px solid #1e40af;
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1e40af;
+            padding-top: 15px;
+        }
+
+        .payment-info {
+            background-color: #f3f4f6;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .payment-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .payment-details {
+            font-size: 9pt;
+        }
+
+        .notes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 9pt;
+            color: #666;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+            text-align: center;
+            font-size: 8pt;
+            color: #999;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-info">
+            {% if company.logo_url %}
+            <img src="{{ company.logo_url }}" alt="{{ company.name }}" style="max-width: 150px; max-height: 60px; margin-bottom: 10px;">
+            {% endif %}
+            <div class="company-name">{{ company.name }}</div>
+            <div class="company-details">
+                {% if company.code %}Įmonės kodas: {{ company.code }}<br>{% endif %}
+                {% if company.vat_code %}PVM mokėtojo kodas: {{ company.vat_code }}<br>{% endif %}
+                {% if company.address %}{{ company.address }}{% if company.city %}, {{ company.city }}{% endif %}{% if company.postal_code %} {{ company.postal_code }}{% endif %}<br>{% endif %}
+                {% if company.phone %}Tel.: {{ company.phone }}<br>{% endif %}
+                {% if company.email %}El. paštas: {{ company.email }}{% endif %}
+            </div>
+        </div>
+        <div class="invoice-info">
+            <div class="invoice-title">SĄSKAITA FAKTŪRA</div>
+            <div class="invoice-number">{{ invoice.invoice_number }}</div>
+            <div class="invoice-dates">
+                Išrašymo data: {{ invoice.issue_date | date }}<br>
+                {% if invoice.due_date %}Apmokėti iki: {{ invoice.due_date | date }}{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="parties">
+        <div class="party">
+            <div class="party-title">Pardavėjas</div>
+            <div class="party-name">{{ company.name }}</div>
+            <div class="party-details">
+                {% if company.code %}Įmonės kodas: {{ company.code }}<br>{% endif %}
+                {% if company.vat_code %}PVM kodas: {{ company.vat_code }}<br>{% endif %}
+                {% if company.address %}{{ company.address }}<br>{% endif %}
+                {% if company.city %}{{ company.city }}{% if company.postal_code %} {{ company.postal_code }}{% endif %}<br>{% endif %}
+            </div>
+        </div>
+        <div class="party">
+            <div class="party-title">Pirkėjas</div>
+            <div class="party-name">{{ client.name }}</div>
+            <div class="party-details">
+                {% if client.code %}Įmonės kodas: {{ client.code }}<br>{% endif %}
+                {% if client.vat_code %}PVM kodas: {{ client.vat_code }}<br>{% endif %}
+                {% if client.address %}{{ client.address }}<br>{% endif %}
+                {% if client.city %}{{ client.city }}{% if client.postal_code %} {{ client.postal_code }}{% endif %}<br>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th style="width: 45%;">Prekė / Paslauga</th>
+                <th style="width: 10%;">Kiekis</th>
+                <th style="width: 10%;">Vnt.</th>
+                <th style="width: 15%;">Vnt. kaina</th>
+                <th style="width: 15%;">Suma</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ item.unit_price | money }}</td>
+                <td>{{ item.total | money }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <div class="totals-row">
+            <span>Suma be PVM:</span>
+            <span>{{ invoice.subtotal | money }}</span>
+        </div>
+        <div class="totals-row">
+            <span>PVM ({{ invoice.vat_rate }}%):</span>
+            <span>{{ invoice.vat_amount | money }}</span>
+        </div>
+        <div class="totals-row grand-total">
+            <span>Viso mokėti:</span>
+            <span>{{ invoice.total | money }}</span>
+        </div>
+    </div>
+
+    <div class="payment-info">
+        <div class="payment-title">Mokėjimo informacija</div>
+        <div class="payment-details">
+            {% if company.bank_name %}Bankas: {{ company.bank_name }}<br>{% endif %}
+            {% if company.bank_account %}Sąskaita: {{ company.bank_account }}<br>{% endif %}
+            {% if company.bank_swift %}SWIFT: {{ company.bank_swift }}<br>{% endif %}
+            Mokėjimo paskirtis: {{ invoice.invoice_number }}
+        </div>
+    </div>
+
+    {% if invoice.notes %}
+    <div class="notes">
+        <strong>Pastabos:</strong><br>
+        {{ invoice.notes }}
+    </div>
+    {% endif %}
+
+    {% if invoice.payment_terms %}
+    <div class="notes">
+        <strong>Mokėjimo sąlygos:</strong><br>
+        {{ invoice.payment_terms }}
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        Sąskaita sugeneruota {{ generated_at.strftime('%Y-%m-%d %H:%M') }} | Saskaita.lt
+    </div>
+</body>
+</html>

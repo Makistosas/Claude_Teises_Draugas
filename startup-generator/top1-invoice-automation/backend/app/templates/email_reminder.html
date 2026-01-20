@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priminimas: Sąskaita {{ invoice.invoice_number }}</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background-color: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h1 style="margin: 0; font-size: 24px;">⚠️ Mokėjimo priminimas</h1>
+    </div>
+
+    <div style="background-color: #fef2f2; padding: 30px; border: 1px solid #fecaca; border-top: none;">
+        <p style="font-size: 16px;">Sveiki,</p>
+
+        <p>
+            Primename, kad sąskaita faktūra <strong>{{ invoice.invoice_number }}</strong>
+            {% if invoice.due_date and invoice.due_date < now %}
+            <span style="color: #dc2626;">yra vėluojanti</span>.
+            {% else %}
+            laukia apmokėjimo.
+            {% endif %}
+        </p>
+
+        <div style="background-color: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0;">Sąskaitos Nr.:</td>
+                    <td style="padding: 8px 0; text-align: right; font-weight: bold;">{{ invoice.invoice_number }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0;">Išrašymo data:</td>
+                    <td style="padding: 8px 0; text-align: right;">{{ invoice.issue_date.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% if invoice.due_date %}
+                <tr>
+                    <td style="padding: 8px 0;">Apmokėti iki:</td>
+                    <td style="padding: 8px 0; text-align: right; color: #dc2626; font-weight: bold;">{{ invoice.due_date.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td style="padding: 12px 0; font-size: 18px; font-weight: bold; border-top: 2px solid #e5e7eb;">Suma mokėti:</td>
+                    <td style="padding: 12px 0; text-align: right; font-size: 24px; font-weight: bold; color: #dc2626; border-top: 2px solid #e5e7eb;">{{ "%.2f"|format(invoice.total / 100) }} €</td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background-color: #fff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2 style="color: #1e40af; margin-top: 0; font-size: 18px;">Mokėjimo informacija</h2>
+
+            {% if company.bank_account %}
+            <p style="margin: 5px 0;"><strong>Banko sąskaita:</strong> {{ company.bank_account }}</p>
+            {% endif %}
+            {% if company.bank_name %}
+            <p style="margin: 5px 0;"><strong>Bankas:</strong> {{ company.bank_name }}</p>
+            {% endif %}
+            <p style="margin: 5px 0;"><strong>Mokėjimo paskirtis:</strong> {{ invoice.invoice_number }}</p>
+        </div>
+
+        <p style="color: #666; font-size: 14px;">
+            Jei jau apmokėjote šią sąskaitą, prašome nepaisyti šio priminimo.
+        </p>
+
+        <p>
+            Pagarbiai,<br>
+            <strong>{{ company.name }}</strong>
+        </p>
+    </div>
+
+    <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+        <p>
+            Šis laiškas sugeneruotas automatiškai.<br>
+            Jei turite klausimų, susisiekite: {{ company.email or company.phone or '' }}
+        </p>
+    </div>
+</body>
+</html>
