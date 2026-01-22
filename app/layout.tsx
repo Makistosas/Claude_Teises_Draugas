@@ -90,7 +90,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-navy-950 text-navy-100 antialiased">
         {isDev && (
           <div className="dev-banner">
-            🛠️ LOCAL DEV MODE – žinutės keliauja į Slack per Chatlio
+            🛠️ LOCAL DEV MODE – naudojamas Elfsight AI Chatbot
           </div>
         )}
         <div className={isDev ? 'pt-6' : ''}>

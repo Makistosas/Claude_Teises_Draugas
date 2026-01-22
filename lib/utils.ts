@@ -60,50 +60,6 @@ export function devLog(event: string, data?: Record<string, unknown>): void {
   }
 }
 
-// Check if Chatlio API is available
-export function isChatlioAvailable(): boolean {
-  return typeof window !== 'undefined' && '_chatlio' in window;
-}
-
-// Try to prefill Chatlio message (if API supports it)
-export function tryChatlioSetMessage(message: string): boolean {
-  if (!isChatlioAvailable()) return false;
-
-  try {
-    // Chatlio doesn't have a documented prefill API,
-    // but we try common patterns
-    const chatlio = (window as unknown as { _chatlio?: { push?: (args: unknown[]) => void } })._chatlio;
-
-    if (chatlio && typeof chatlio.push === 'function') {
-      // This is speculative - adjust if Chatlio adds prefill support
-      chatlio.push(['setDraft', message]);
-      devLog('chatlio-prefill-attempted', { success: true });
-      return true;
-    }
-  } catch (e) {
-    devLog('chatlio-prefill-failed', { error: String(e) });
-  }
-
-  return false;
-}
-
-// Open Chatlio widget
-export function openChatlio(): void {
-  if (!isChatlioAvailable()) {
-    devLog('chatlio-open-failed', { reason: 'not-available' });
-    return;
-  }
-
-  try {
-    const chatlio = (window as unknown as { _chatlio?: { push?: (args: unknown[]) => void } })._chatlio;
-    if (chatlio && typeof chatlio.push === 'function') {
-      chatlio.push(['open']);
-      devLog('chatlio-opened');
-    }
-  } catch (e) {
-    devLog('chatlio-open-error', { error: String(e) });
-  }
-}
 
 // Check if device is mobile
 export function isMobile(): boolean {

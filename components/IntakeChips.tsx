@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FileWarning, FileSignature, Scale, Receipt, Copy, Check, MessageCircle } from 'lucide-react';
 import { intakeTemplates, enrichTemplate } from '@/lib/templates';
-import { copyToClipboard, generateMetaFooter, tryChatlioSetMessage, openChatlio, devLog } from '@/lib/utils';
+import { copyToClipboard, generateMetaFooter, devLog } from '@/lib/utils';
 import { useToast } from './Toast';
 
 // Icon mapping
@@ -28,36 +28,21 @@ export default function IntakeChips() {
     const metaFooter = generateMetaFooter();
     const fullTemplate = enrichTemplate(template.template, metaFooter);
 
-    // Try Chatlio prefill first (if API supports it)
-    const prefillSuccess = tryChatlioSetMessage(fullTemplate);
+    // Copy to clipboard
+    const copySuccess = await copyToClipboard(fullTemplate);
 
-    if (prefillSuccess) {
-      // If prefill worked, just open the chat
-      openChatlio();
-      showToast('Šablonas įkeltas į chatą', 'success');
-      devLog('template-prefilled', { templateId });
+    if (copySuccess) {
+      setCopiedId(templateId);
+      showToast('Šablonas nukopijuotas – įklijuok į chatą', 'success');
+      devLog('template-copied', { templateId });
+
+      // Reset copy indicator
+      setTimeout(() => {
+        setCopiedId(null);
+      }, 2000);
     } else {
-      // Fallback: copy to clipboard
-      const copySuccess = await copyToClipboard(fullTemplate);
-
-      if (copySuccess) {
-        setCopiedId(templateId);
-        showToast('Šablonas nukopijuotas – įklijuok į chatą', 'success');
-        devLog('template-copied', { templateId });
-
-        // Open chat after short delay
-        setTimeout(() => {
-          openChatlio();
-        }, 500);
-
-        // Reset copy indicator
-        setTimeout(() => {
-          setCopiedId(null);
-        }, 2000);
-      } else {
-        showToast('Nepavyko nukopijuoti. Bandykite dar kartą.', 'error');
-        devLog('template-copy-failed', { templateId });
-      }
+      showToast('Nepavyko nukopijuoti. Bandykite dar kartą.', 'error');
+      devLog('template-copy-failed', { templateId });
     }
   };
 
