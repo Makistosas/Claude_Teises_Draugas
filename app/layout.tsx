@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const inter = Inter({
@@ -95,6 +96,16 @@ export default function RootLayout({
         <div className={isDev ? 'pt-6' : ''}>
           {children}
         </div>
+
+        {/* Elfsight AI Chatbot Widget */}
+        <Script
+          src="https://elfsightcdn.com/platform.js"
+          strategy="lazyOnload"
+        />
+        <div
+          className="elfsight-app-86283f0d-1a93-4c49-9651-c933fc5a17e5"
+          data-elfsight-app-lazy
+        />
       </body>
     </html>
   );
