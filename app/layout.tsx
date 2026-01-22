@@ -100,7 +100,7 @@ export default function RootLayout({
         {/* Elfsight AI Chatbot Widget */}
         <Script
           src="https://elfsightcdn.com/platform.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <div
           className="elfsight-app-86283f0d-1a93-4c49-9651-c933fc5a17e5"

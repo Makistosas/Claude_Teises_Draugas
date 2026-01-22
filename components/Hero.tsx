@@ -1,7 +1,6 @@
 'use client';
 
 import { Shield, Lock, Scale, Banknote, ArrowDown } from 'lucide-react';
-import ChatlioEmbed from './ChatlioEmbed';
 import IntakeChips from './IntakeChips';
 
 const trustBadges = [
@@ -59,52 +58,31 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* CTA buttons */}
+            {/* CTA button */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => {
-                  if (typeof window !== 'undefined' && '_chatlio' in window) {
-                    const chatlio = (window as unknown as { _chatlio: { push: (args: string[]) => void } })._chatlio;
-                    chatlio.push(['open']);
-                  }
-                }}
-                className="btn-primary relative"
-              >
+              <button onClick={scrollToHow} className="btn-primary relative">
                 <span className="pulse-ring" />
-                Pradėti pokalbį
-              </button>
-              <button onClick={scrollToHow} className="btn-secondary">
                 <ArrowDown className="w-4 h-4" />
                 Kaip tai veikia
               </button>
             </div>
-
-            {/* Mobile: Show chat trigger */}
-            <div className="lg:hidden mt-4">
-              <ChatlioEmbed />
-            </div>
           </div>
 
-          {/* Right side - Chat panel */}
+          {/* Right side - Info panel */}
           <div className="hidden lg:block animate-slide-up">
             <div className="glass-panel p-6 space-y-6 shadow-glow">
-              {/* Chat panel header */}
+              {/* Panel header */}
               <div className="flex items-center gap-3 pb-4 border-b border-white/10">
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse-soft" />
-                <span className="text-sm text-navy-200">Prisijungta – rašyk savo klausimą</span>
+                <span className="text-sm text-navy-200">Pasirink temą ir pradėk pokalbį</span>
               </div>
 
               {/* Intake chips */}
               <IntakeChips />
 
-              {/* Chat embed area */}
-              <div className="pt-4 border-t border-white/10">
-                <ChatlioEmbed />
-              </div>
-
               {/* Helper text */}
               <p className="text-xs text-navy-500 text-center">
-                Visos žinutės siunčiamos į mūsų komandą per Chatlio
+                Naudok AI asistentą apatiniame dešiniame kampe
               </p>
             </div>
           </div>
