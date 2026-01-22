@@ -97,18 +97,10 @@ export default function FAQ() {
           {/* CTA */}
           <div className="mt-12 text-center">
             <p className="text-navy-400 mb-4">Turi kitą klausimą?</p>
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined' && '_chatlio' in window) {
-                  const chatlio = (window as unknown as { _chatlio: { push: (args: string[]) => void } })._chatlio;
-                  chatlio.push(['open']);
-                }
-              }}
-              className="btn-secondary"
-            >
+            <p className="text-navy-300 flex items-center justify-center gap-2">
               <MessageCircle className="w-4 h-4" />
-              Klausk chate
-            </button>
+              Spausk pokalbio ikoną dešinėje
+            </p>
           </div>
         </div>
       </div>

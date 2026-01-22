@@ -1,7 +1,6 @@
 'use client';
 
 import { Shield, Lock, Scale, Banknote, ArrowDown } from 'lucide-react';
-import ChatlioEmbed from './ChatlioEmbed';
 import IntakeChips from './IntakeChips';
 
 const trustBadges = [
@@ -62,12 +61,7 @@ export default function Hero() {
             {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => {
-                  if (typeof window !== 'undefined' && '_chatlio' in window) {
-                    const chatlio = (window as unknown as { _chatlio: { push: (args: string[]) => void } })._chatlio;
-                    chatlio.push(['open']);
-                  }
-                }}
+                onClick={scrollToHow}
                 className="btn-primary relative"
               >
                 <span className="pulse-ring" />
@@ -77,11 +71,6 @@ export default function Hero() {
                 <ArrowDown className="w-4 h-4" />
                 Kaip tai veikia
               </button>
-            </div>
-
-            {/* Mobile: Show chat trigger */}
-            <div className="lg:hidden mt-4">
-              <ChatlioEmbed />
             </div>
           </div>
 
@@ -97,14 +86,9 @@ export default function Hero() {
               {/* Intake chips */}
               <IntakeChips />
 
-              {/* Chat embed area */}
-              <div className="pt-4 border-t border-white/10">
-                <ChatlioEmbed />
-              </div>
-
               {/* Helper text */}
-              <p className="text-xs text-navy-500 text-center">
-                Visos žinutės siunčiamos į mūsų komandą per Chatlio
+              <p className="text-xs text-navy-500 text-center pt-4 border-t border-white/10">
+                Spauskite pokalbio ikoną dešinėje, kad pradėtumėte
               </p>
             </div>
           </div>

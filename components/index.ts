@@ -1,5 +1,4 @@
 // Component exports for cleaner imports
-export { default as ChatlioEmbed, useChatlioOpen } from './ChatlioEmbed';
 export { ToastProvider, useToast } from './Toast';
 export { default as IntakeChips } from './IntakeChips';
 export { default as Hero } from './Hero';

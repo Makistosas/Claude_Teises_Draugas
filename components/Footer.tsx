@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Scale, Mail, MessageCircle } from 'lucide-react';
+import { Scale, Mail } from 'lucide-react';
 
 const footerLinks = {
   main: [
@@ -36,18 +36,6 @@ export default function Footer() {
               Padedame sudėlioti tekstą – tu nuspręsi, kaip jį panaudoti.
             </p>
             <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  if (typeof window !== 'undefined' && '_chatlio' in window) {
-                    const chatlio = (window as unknown as { _chatlio: { push: (args: string[]) => void } })._chatlio;
-                    chatlio.push(['open']);
-                  }
-                }}
-                className="btn-ghost text-sm"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Pradėti pokalbį
-              </button>
               <a
                 href="mailto:info@teisesdraugas.lt"
                 className="btn-ghost text-sm"

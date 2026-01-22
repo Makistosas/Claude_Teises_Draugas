@@ -113,7 +113,7 @@ export default function PrivacyPage() {
                 Naudojame šias patikimas trečiąsias šalis:
               </p>
               <ul className="list-disc list-inside text-navy-300 space-y-2">
-                <li><strong className="text-white">Chatlio</strong> – pokalbių platformai</li>
+                <li><strong className="text-white">Elfsight</strong> – AI pokalbių platformai</li>
                 <li><strong className="text-white">Slack</strong> – komandos komunikacijai</li>
                 <li><strong className="text-white">Vercel</strong> – svetainės talpinimui</li>
               </ul>
